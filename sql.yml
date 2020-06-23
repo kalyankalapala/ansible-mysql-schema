@@ -1,0 +1,40 @@
+---
+- hosts: dbserver
+  become: yes
+  tasks:
+    - name: install wget 
+      yum: name=wget state=installed
+    
+    - name: install python
+      yum: name=MySQL-python.x86_64 state=installed
+
+    - name: install php
+      yum: name=httpd state=installed
+
+    - name: install apache
+      yum: name=php-mysql.x86_64 state=installed
+    
+    - name: Start Apache service
+      service: name=httpd state=restarted enabled=yes
+   
+    - name: download library
+      get_url: url=http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm dest=/root
+    
+    - name: install mysql server
+      yum: name=mysql-community-server.x86_64 state=installed
+
+    - name: install mysql client
+      yum: name=mysql-community-client.x86_64 state=installed
+
+    - name: Create database user
+      mysql_user:
+        login_user: root
+        login_password: Jersey@123
+        name: root
+        host_all: yes
+        state: present
+
+    - name: Create database
+      mysql_db: name=world state=present login_user='root' login_password='Jersey@123'
+
+

@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+     
+    - name: create a backup
+      mysql_db:
+        login_user: root
+        login_password: Jersey@123
+        name: accounts
+        state: dump
+        target: /tmp/accounts.sql
+
+- hosts: dbserver
+  become: yes
+  tasks: 
+    - name: copy the database to the development server
+      copy: 
+        src=/tmp/accounts.sql 
+        dest=/tmp
+
+    - name: import the database
+      mysql_db:
+        name: accounts
+        login_user: root
+        login_password: Jersey@123
+        state: import
+        target: /tmp/accounts.sql

@@ -9,14 +9,14 @@
         login_password: Jersey@123
         name: accounts
         state: dump
-        target: /tmp/accounts.sql
+        target: /etc/ansible/mysql/git/ansible-mysql-schema/accounts.sql
 
 - hosts: dbserver
   become: yes
   tasks: 
     - name: copy the database to the development server
       copy: 
-        src=/tmp/accounts.sql 
+        src=/etc/ansible/mysql/git/ansible-mysql-schema/accounts.sql
         dest=/tmp
 
     - name: import the database
